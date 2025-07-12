@@ -80,7 +80,8 @@ const MovieList = ({ title, movies }) => {
             style={{
                 scrollbarWidth: "none",
                 msOverflowStyle: "none",
-                overflowY:"visible"
+                overflowY:"visible",
+                overflowX:"auto"
             }}
             >
             {movies.map((movie, index) => (
