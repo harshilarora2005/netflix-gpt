@@ -1,21 +1,31 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import { useDispatch } from 'react-redux'
-import { API_OPTIONS } from '../../utils/constants'
-import { useEffect } from 'react'
-import { addTopRatedMovies } from '../../utils/movieSlice'
+import { useDispatch } from "react-redux";
+import { API_OPTIONS } from "../../utils/constants";
+import { setTopRatedMovies, appendTopRatedMovies } from "../../utils/movieSlice";
+
 const useTopRatedMovies = () => {
     const dispatch = useDispatch();
-    const getNowPlayingMovies = async() => {
-        const data = await fetch(
-            'https://api.themoviedb.org/3/movie/top_rated?page=1', API_OPTIONS);
-        const json = await data.json();
-        console.log(json);
 
-        dispatch(addTopRatedMovies(json.results));
-    }
-    useEffect(()=>{
-        getNowPlayingMovies();
-    },[])
-}
+    const fetchTopRatedMovies = async (page = 1) => {
+        try {
+        const res = await fetch(
+            `https://api.themoviedb.org/3/movie/top_rated?page=${page}`,
+            API_OPTIONS
+        );
+        const json = await res.json();
+        const movies = json?.results || [];
+
+        if (page === 1) {
+            dispatch(setTopRatedMovies(movies));
+        } else {
+            dispatch(appendTopRatedMovies(movies));
+        }
+        return movies.length > 0;
+        } catch (err) {
+        console.error("Error fetching Top Rated movies:", err);
+        return false;
+        }
+    };
+    return fetchTopRatedMovies;
+};
 
 export default useTopRatedMovies;

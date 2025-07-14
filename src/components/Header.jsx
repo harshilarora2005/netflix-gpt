@@ -3,17 +3,21 @@
 import logo from "/logo-nobg.png";
 import avatar from "../assets/Netflix-avatar.png";
 import { useLocation, Link, useNavigate } from "react-router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { signOut, onAuthStateChanged } from "firebase/auth";
 import { auth } from "../utils/firebase";
 import { useDispatch, useSelector } from "react-redux";
 import { removeUser, addUser} from "../utils/userSlice";
+import { SearchCode , SearchX} from "lucide-react";
+import { toggleSearchView } from "../utils/searchSlice";
 const Header = () => {
+    const showSearch = useSelector((store) => store?.search?.showSearch);
     const location = useLocation();
     const dispatch = useDispatch();
     const userStore = useSelector((store)=>store.user);
     const isBrowsePage = location.pathname === "/browse";
     const navigate = useNavigate();
+    const [searchOpen,setSearchOpen] = useState(showSearch);
     const handleSignOut = () => {
         signOut(auth).then(()=>{
             dispatch(removeUser());
@@ -36,7 +40,10 @@ const Header = () => {
         });
         return () => unsubsrcibe();
     },[])
-
+    const handleSearchClick = () => {
+        dispatch(toggleSearchView());
+        setSearchOpen(!searchOpen);
+    }
     return (
         <header className="top-0 z-50 fixed w-full px-6 py-4 bg-gradient-to-b from-black/80 to-transparent shadow-inner">
             <div className="flex items-center justify-between max-w-7xl mx-auto">
@@ -80,7 +87,14 @@ const Header = () => {
                 </div>
                 {isBrowsePage && (
                     <div className="flex items-center space-x-4">
-                        
+                        <button className="cursor-pointer p-4 transform hover:scale-110 transition duration-300"
+                        onClick={()=> handleSearchClick()}>
+                            {searchOpen?(
+                                <SearchX color="white"/> 
+                            ):(
+                                <SearchCode color="white"/> 
+                            )}
+                        </button>
                         <div className="relative">
                             <img 
                                 src={userStore?.photoURL}

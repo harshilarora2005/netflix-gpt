@@ -2,11 +2,12 @@ import { useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import MovieCard from "./MovieCard";
 
-const MovieList = ({ title, movies }) => {
+const MovieList = ({ title, movies, onLoadMore, hasMore }) => {
     const scrollContainerRef = useRef(null);
     const [canScrollLeft, setCanScrollLeft] = useState(false);
     const [canScrollRight, setCanScrollRight] = useState(true);
     const [isHovered, setIsHovered] = useState(false);
+    const [isFetching, setIsFetching] = useState(false);
 
     const checkScrollability = () => {
         if (scrollContainerRef.current) {
@@ -30,6 +31,24 @@ const MovieList = ({ title, movies }) => {
         });
 
         setTimeout(checkScrollability, 300);
+        }
+    };
+
+    const handleScroll = () => {
+        checkScrollability();
+
+        if (
+        !isFetching &&
+        hasMore &&
+        scrollContainerRef.current
+        ) {
+        const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current;
+        if (scrollWidth - scrollLeft - clientWidth < 150) {
+            setIsFetching(true);
+            onLoadMore()
+            .catch(() => {}) // optionally handle error
+            .finally(() => setIsFetching(false));
+        }
         }
     };
 
@@ -76,17 +95,23 @@ const MovieList = ({ title, movies }) => {
             <div
             ref={scrollContainerRef}
             className="flex gap-2 overflow-x-auto scrollbar-hide scroll-smooth pt-4 relative z-10"
-            onScroll={checkScrollability}
+            onScroll={handleScroll}
             style={{
                 scrollbarWidth: "none",
                 msOverflowStyle: "none",
-                overflowY:"visible",
-                overflowX:"auto"
+                overflowY: "visible",
+                overflowX: "auto",
             }}
             >
             {movies.map((movie, index) => (
                 <MovieCard key={movie?.id || index} movie={movie} />
             ))}
+
+            {isFetching && (
+                <div className="flex items-center justify-center px-4 text-white">
+                Loading...
+                </div>
+            )}
             </div>
         </div>
 

@@ -1,30 +1,55 @@
 import { createSlice } from "@reduxjs/toolkit";
+
 const movieSlice = createSlice({
-    name:"movies",
-    initialState:{
-        nowPlayingMovies : null,
+    name: "movies",
+    initialState: {
+        nowPlayingMovies: [],
         trailerVideo: null,
-        popularMovies:null,
-        topRatedMovies:null,
-        upcomingMovies:null
+        popularMovies: [],
+        topRatedMovies: [],
+        upcomingMovies: [],
     },
-    reducers:{
-        addNowPlayingMovies:(state,action)=>{
-            state.nowPlayingMovies=action.payload
+    reducers: {
+        setNowPlayingMovies: (state, action) => {
+        state.nowPlayingMovies = action.payload;
         },
-        addTrailerVideo:(state, action)=> {
-            state.trailerVideo=action.payload
+        appendNowPlayingMovies: (state, action) => {
+        state.nowPlayingMovies = [...state.nowPlayingMovies, ...action.payload];
         },
-        addPopularMovies:(state,action)=>{
-            state.popularMovies=action.payload
+        setPopularMovies: (state, action) => {
+        state.popularMovies = action.payload;
         },
-        addTopRatedMovies:(state,action)=>{
-            state.topRatedMovies=action.payload
+        appendPopularMovies: (state, action) => {
+        state.popularMovies = [...state.popularMovies, ...action.payload];
         },
-        addUpcomingMovies:(state,action)=>{
-            state.upcomingMovies=action.payload
-        }
-    }
-})
-export const {addNowPlayingMovies, addTrailerVideo, addPopularMovies, addTopRatedMovies, addUpcomingMovies} = movieSlice.actions;
+        setTopRatedMovies: (state, action) => {
+        state.topRatedMovies = action.payload;
+        },
+        appendTopRatedMovies: (state, action) => {
+        state.topRatedMovies = [...state.topRatedMovies, ...action.payload];
+        },
+        setUpcomingMovies: (state, action) => {
+        state.upcomingMovies = action.payload;
+        },
+        appendUpcomingMovies: (state, action) => {
+        state.upcomingMovies = [...state.upcomingMovies, ...action.payload];
+        },
+        addTrailerVideo: (state, action) => {
+        state.trailerVideo = action.payload;
+        },
+    },
+});
+
+export const {
+    setNowPlayingMovies,
+    appendNowPlayingMovies,
+    setPopularMovies,
+    appendPopularMovies,
+    setTopRatedMovies,
+    appendTopRatedMovies,
+    setUpcomingMovies,
+    appendUpcomingMovies,
+    addTrailerVideo,
+} = movieSlice.actions;
+
 export default movieSlice.reducer;
