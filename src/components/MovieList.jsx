@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import MovieCard from "./MovieCard";
 
@@ -34,7 +34,7 @@ const MovieList = ({ title, movies, onLoadMore, hasMore }) => {
         }
     };
 
-    const handleScroll = () => {
+    const handleScroll = useCallback(() => {
         checkScrollability();
 
         if (
@@ -50,7 +50,7 @@ const MovieList = ({ title, movies, onLoadMore, hasMore }) => {
             .finally(() => setIsFetching(false));
         }
         }
-    };
+    },[isFetching,hasMore,onLoadMore]);
 
     useEffect(() => {
         checkScrollability();

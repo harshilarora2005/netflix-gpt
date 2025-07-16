@@ -1,7 +1,7 @@
 import { useDispatch } from "react-redux";
 import {
-  setNowPlayingMovies,
-  appendNowPlayingMovies,
+    setNowPlayingMovies,
+    appendNowPlayingMovies,
 } from "../../utils/movieSlice";
 import { API_OPTIONS } from "../../utils/constants";
 
