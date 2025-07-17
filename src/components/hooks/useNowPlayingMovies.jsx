@@ -4,11 +4,11 @@ import {
     appendNowPlayingMovies,
 } from "../../utils/movieSlice";
 import { API_OPTIONS } from "../../utils/constants";
+import { useCallback } from "react";
 
 const useNowPlayingMovies = () => {
     const dispatch = useDispatch();
-
-    const fetchNowPlaying = async (page = 1) => {
+    const fetchNowPlaying = useCallback( async (page = 1) => {
         try {
         const res = await fetch(
             `https://api.themoviedb.org/3/movie/now_playing?page=${page}`,
@@ -28,7 +28,7 @@ const useNowPlayingMovies = () => {
         console.error("Error fetching Now Playing movies:", err);
         return false;
         }
-    };
+    },[dispatch]);
 
     return fetchNowPlaying;
 };

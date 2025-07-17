@@ -1,11 +1,11 @@
 import { useDispatch } from "react-redux";
 import { API_OPTIONS } from "../../utils/constants";
 import { setUpcomingMovies, appendUpcomingMovies } from "../../utils/movieSlice";
-
+import { useCallback } from "react";
 const useUpcomingMovies = () => {
     const dispatch = useDispatch();
 
-    const fetchUpcomingMovies = async (page = 1) => {
+    const fetchUpcomingMovies = useCallback(async (page = 1) => {
         try {
         const res = await fetch(
             `https://api.themoviedb.org/3/movie/upcoming?page=${page}`,
@@ -25,7 +25,7 @@ const useUpcomingMovies = () => {
         console.error("Error fetching Upcoming movies:", err);
         return false;
         }
-    };
+    },[dispatch]);
 
     return fetchUpcomingMovies;
 };

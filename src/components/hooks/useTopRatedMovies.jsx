@@ -1,11 +1,12 @@
 import { useDispatch } from "react-redux";
 import { API_OPTIONS } from "../../utils/constants";
 import { setTopRatedMovies, appendTopRatedMovies } from "../../utils/movieSlice";
+import { useCallback } from "react";
 
 const useTopRatedMovies = () => {
     const dispatch = useDispatch();
 
-    const fetchTopRatedMovies = async (page = 1) => {
+    const fetchTopRatedMovies = useCallback(async (page = 1) => {
         try {
         const res = await fetch(
             `https://api.themoviedb.org/3/movie/top_rated?page=${page}`,
@@ -24,7 +25,7 @@ const useTopRatedMovies = () => {
         console.error("Error fetching Top Rated movies:", err);
         return false;
         }
-    };
+    },[dispatch]);
     return fetchTopRatedMovies;
 };
 
