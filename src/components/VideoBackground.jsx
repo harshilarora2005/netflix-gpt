@@ -1,10 +1,12 @@
-
 import { useSelector } from "react-redux";
 import useGetMovieVideo from "./hooks/useGetMovieVideo";
-const VideoBackground = ({movieid}) => {
-    useGetMovieVideo(movieid);
-    const trailerVideo = useSelector(store=> store.movies?.trailerVideo);
-    console.log(trailerVideo);
+const VideoBackground = ({movieid,mediaType = "movie"}) => {
+    useGetMovieVideo(movieid,mediaType);
+    const trailerVideo = useSelector((store) =>
+        mediaType === "movie"
+            ? store.movies?.trailerVideo
+            : store.shows?.trailerVideo
+    );
     if(!trailerVideo){
         return
     }

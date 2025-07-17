@@ -16,7 +16,7 @@ const Header = () => {
     const location = useLocation();
     const dispatch = useDispatch();
     const userStore = useSelector((store)=>store.user);
-    const isBrowsePage = location.pathname === "/browse";
+    const isBrowsePage = (location.pathname === "/browse" || location.pathname.includes("/browse"));
     const navigate = useNavigate();
     const [searchOpen,setSearchOpen] = useState(showSearch);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -36,7 +36,9 @@ const Header = () => {
                 const {uid,email,displayName,photoURL} = user;
                 console.log(photoURL);
                 dispatch(addUser({uid:uid,email:email,displayName:displayName,photoURL:photoURL}));
-                navigate("/browse");
+                if (location.pathname === "/" || location.pathname === "/login") {
+                    navigate("/browse");
+                }
             }else{
                 dispatch(removeUser());
                 navigate("/");

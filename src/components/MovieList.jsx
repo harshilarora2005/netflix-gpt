@@ -46,7 +46,7 @@ const MovieList = ({ title, movies, onLoadMore, hasMore }) => {
         if (scrollWidth - scrollLeft - clientWidth < 150) {
             setIsFetching(true);
             onLoadMore()
-            .catch(() => {}) // optionally handle error
+            .catch(() => {}) 
             .finally(() => setIsFetching(false));
         }
         }

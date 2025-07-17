@@ -8,7 +8,7 @@ const MovieCard = ({ movie }) => {
 
     const movieData = {
         id: movie?.id || 1,
-        title: movie?.original_title || movie?.title || 'Unknown Title',
+        title: movie?.original_title || movie?.title || movie?.original_name||'Unknown Title',
         backdrop_path: movie?.backdrop_path || movie?.poster_path,
         overview: movie?.overview || 'Movie description goes here...',
         vote_average: movie?.vote_average || 8.5,
