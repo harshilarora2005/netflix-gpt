@@ -124,6 +124,7 @@ const SecondaryContainer = () => {
                             movies={tvShows.airingTodayTVShows}
                             hasMore={hasMoreAiringToday}
                             onLoadMore={loadMoreAiringToday}
+                            mediaType="tv"
                         />
                         
                         <MovieList
@@ -131,6 +132,7 @@ const SecondaryContainer = () => {
                             movies={tvShows.onTheAirTVShows}
                             hasMore={hasMoreOnTheAir}
                             onLoadMore={loadMoreOnTheAir}
+                            mediaType="tv"
                         />
                         
                         <MovieList
@@ -138,6 +140,7 @@ const SecondaryContainer = () => {
                             movies={tvShows.popularTVShows}
                             hasMore={hasMorePopular}
                             onLoadMore={loadMorePopular}
+                            mediaType="tv"
                         />
                         
                         <MovieList
@@ -145,6 +148,7 @@ const SecondaryContainer = () => {
                             movies={tvShows.topRatedTVShows}
                             hasMore={hasMoreTopRated}
                             onLoadMore={loadMoreTopRated}
+                            mediaType="tv"
                         />
                     </>
                 )}

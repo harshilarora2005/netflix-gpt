@@ -8,4 +8,4 @@ export const API_OPTIONS = {
     }
 };
 
-export const IMG_CDN = "https://image.tmdb.org/t/p/w500/";
+export const IMG_CDN = "https://image.tmdb.org/t/p/w500";

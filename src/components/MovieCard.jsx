@@ -1,11 +1,48 @@
-import { useState, useRef } from 'react';
-import { Play, Plus, ThumbsUp, ChevronDown } from 'lucide-react';
+import { useState, useRef,useEffect } from 'react';
+import { Play, Plus, ThumbsUp, ChevronDown,Check } from 'lucide-react';
 import { IMG_CDN } from '../utils/constants';
-
-const MovieCard = ({ movie }) => {
+import { useSelector } from 'react-redux';
+import { addToUserList, removeFromUserList, isInUserList } from "../utils/firebaselist";
+const MovieCard = ({ movie , mediaType = "movie" }) => {
+    const [isInList, setIsInList] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const user = useSelector((store) => store.user);
     const [isHovered, setIsHovered] = useState(false);
     const cardRef = useRef(null);
+    useEffect(() => {
+        const checkIfInList = async () => {
+            if (user?.uid && movie?.id) {
+                const inList = await isInUserList(user.uid, movie.id);
+                setIsInList(inList);
+            }
+        };
 
+        checkIfInList();
+    }, [user?.uid, movie?.id]);
+    const handleListToggle = async () => {
+        if (!user?.uid || !movie?.id) return;
+        
+        setIsLoading(true);
+        try {
+            const movieData = {
+                ...movie,
+                media_type: mediaType
+            };
+
+            if (isInList) {
+                await removeFromUserList(user.uid, movie.id);
+                setIsInList(false);
+            } else {
+                await addToUserList(user.uid, movieData);
+                setIsInList(true);
+            }
+        } catch (error) {
+            console.error("Error updating list:", error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+    
     const movieData = {
         id: movie?.id || 1,
         title: movie?.original_title || movie?.title || movie?.original_name||'Unknown Title',
@@ -73,8 +110,17 @@ const MovieCard = ({ movie }) => {
                         <button className="w-8 h-8 bg-white rounded-full flex items-center justify-center hover:bg-gray-200 transition-colors">
                             <Play className="w-4 h-4 text-black fill-black ml-0.5" />
                         </button>
-                        <button className="w-8 h-8 border border-gray-400 rounded-full flex items-center justify-center hover:border-white transition-colors">
-                            <Plus className="w-4 h-4 text-gray-400 hover:text-white" />
+                        <button className="w-8 h-8 border border-gray-400 rounded-full flex items-center justify-center hover:border-white transition-colors"
+                        onClick={handleListToggle}
+                        disabled={isLoading}>
+                            {isLoading ? (
+                                <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div>
+                            ) : isInList ? (
+                                <Check className="w-4 h-4 text-gray-400 hover:text-white"size={16} />
+                            ) : (
+                                <Plus  className="w-4 h-4 text-gray-400 hover:text-white" size={16} />
+                            )}
+                            {/* <Plus className="w-4 h-4 text-gray-400 hover:text-white" /> */}
                         </button>
                         <button className="w-8 h-8 border border-gray-400 rounded-full flex items-center justify-center hover:border-white transition-colors">
                             <ThumbsUp className="w-4 h-4 text-gray-400 hover:text-white" />

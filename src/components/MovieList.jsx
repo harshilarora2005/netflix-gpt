@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import MovieCard from "./MovieCard";
 
-const MovieList = ({ title, movies, onLoadMore, hasMore }) => {
+const MovieList = ({ title, movies, onLoadMore, hasMore, mediaType='movie' }) => {
     const scrollContainerRef = useRef(null);
     const [canScrollLeft, setCanScrollLeft] = useState(false);
     const [canScrollRight, setCanScrollRight] = useState(true);
@@ -104,7 +104,7 @@ const MovieList = ({ title, movies, onLoadMore, hasMore }) => {
             }}
             >
             {movies.map((movie, index) => (
-                <MovieCard key={movie?.id || index} movie={movie} />
+                <MovieCard key={movie?.id || index} movie={movie} mediaType={mediaType} />
             ))}
 
             {isFetching && (
