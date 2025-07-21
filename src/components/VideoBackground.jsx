@@ -11,7 +11,6 @@ const VideoBackground = ({movieid,mediaType = "movie"}) => {
         return
     }
     const trailerKey = trailerVideo?.key;
-    console.log(trailerKey);
     return (
         <div className="-mt-16 w-full h-[110vh] overflow-hidden relative">
             {trailerKey && (

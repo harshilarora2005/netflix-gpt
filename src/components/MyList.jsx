@@ -4,12 +4,13 @@ import Header from "./Header";
 import { getUserList } from "../utils/firebaselist";
 import { IMG_CDN } from "../utils/constants";
 import { Play, Info, X } from "lucide-react";
-
+import Explore from "./Explore";
 const MyList = () => {
     const [userList, setUserList] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const user = useSelector((store) => store.user);
+    const showSearch = useSelector((store) => store?.search?.showSearch);
 
     useEffect(() => {
         const fetchUserList = async () => {
@@ -65,6 +66,10 @@ const MyList = () => {
     return (
         <div className="bg-black min-h-screen">
             <Header />
+            {showSearch ?(
+                <Explore/>
+            ): 
+            (
             <div className="pt-24 px-4 sm:px-6 lg:px-8">
                 <div className="max-w-7xl mx-auto">
                     <h1 className="text-3xl font-bold text-white mb-8">My List</h1>
@@ -133,7 +138,9 @@ const MyList = () => {
                     )}
                 </div>
             </div>
+            )}
         </div>
+        
     );
 };
 

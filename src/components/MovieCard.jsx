@@ -120,7 +120,6 @@ const MovieCard = ({ movie , mediaType = "movie" }) => {
                             ) : (
                                 <Plus  className="w-4 h-4 text-gray-400 hover:text-white" size={16} />
                             )}
-                            {/* <Plus className="w-4 h-4 text-gray-400 hover:text-white" /> */}
                         </button>
                         <button className="w-8 h-8 border border-gray-400 rounded-full flex items-center justify-center hover:border-white transition-colors">
                             <ThumbsUp className="w-4 h-4 text-gray-400 hover:text-white" />
@@ -130,6 +129,20 @@ const MovieCard = ({ movie , mediaType = "movie" }) => {
                         </button>
                     </div>
                     <h3 className="font-bold text-sm mb-1 text-white line-clamp-1">{movieData.title}</h3>
+                    <div className="flex items-center gap-2 mb-2">
+                        <span className={`px-2 py-0.5 text-xs rounded font-medium ${
+                            mediaType === 'tv' 
+                                ? 'bg-blue-600 text-white' 
+                                : 'bg-red-600 text-white'
+                        }`}>
+                            {mediaType === 'tv' ? 'TV SHOW' : 'MOVIE'}
+                        </span>
+                        {mediaType === 'tv' && movie?.number_of_seasons && (
+                            <span className="text-xs text-gray-400">
+                                {movie.number_of_seasons} Season{movie.number_of_seasons !== 1 ? 's' : ''}
+                            </span>
+                        )}
+                    </div>
                     <div className="flex items-center gap-2 text-xs text-gray-300 mb-2">
                         <span className="text-green-400 font-semibold">
                             {Math.round(movieData.vote_average * 10)}% Match

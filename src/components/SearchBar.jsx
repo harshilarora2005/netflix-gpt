@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { getMovieRecommendations } from '../utils/gemini';
-import useSearchMovies from './hooks/useSearchMovie';
+import useSearchContent from './hooks/useSearchContent';
 import { useDispatch } from 'react-redux';
 import { addRecommendedMovies, addSeenMovies, clearMovies, addPromptText} from '../utils/searchSlice';
 
@@ -12,7 +12,7 @@ const SearchBar = () => {
     const [loading, setLoading] = useState(false);
     const [debouncedQuery, setDebouncedQuery] = useState("");
 
-    const searchMovie = useSearchMovies();
+    const searchContent = useSearchContent();
     const dispatch = useDispatch();
 
     const validationSchema = Yup.object({
@@ -37,9 +37,9 @@ const SearchBar = () => {
         try {
             dispatch(addPromptText(query));
             const response = await getMovieRecommendations(query);
-            const movieNames = response.split(',').map((m) => m.trim()).filter(Boolean);
+            const contentNames = response.split(',').map((m) => m.trim()).filter(Boolean);
 
-            const promiseArray = movieNames.map((movie) => searchMovie(movie));
+            const promiseArray = contentNames.map((content) => searchContent(content));
             const result = await Promise.all(promiseArray);
             const recommendedMovies = result.flat().filter(Boolean);
             dispatch(clearMovies());

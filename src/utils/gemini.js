@@ -8,9 +8,10 @@ export const getMovieRecommendations = async (promptText) => {
     try {
         const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
-        const prompt = `Act as a movie recommendation system. Based on the user's intent, suggest the most suitable movies.
-    Only respond with a comma-separated list of movie names, no explanations or extras.
-    Prompt: "${promptText}", Give exactly 25 movies.`;
+        const prompt = `Act as a movie and TV show recommendation system. Based on the user's intent, suggest the most suitable movies and TV shows.
+        Only respond with a comma-separated list of movie and TV show names, no explanations or extras.
+        Mix both movies and TV shows in your recommendations.
+        Prompt: "${promptText}", titles (movies and TV shows combined).`;
 
         const result = await model.generateContent(prompt);
         const response = await result.response;

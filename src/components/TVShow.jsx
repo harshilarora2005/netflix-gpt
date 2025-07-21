@@ -8,6 +8,8 @@ import MainContainer1 from "./MainContainer1";
 import SecondaryContainer1 from "./SecondaryContainer1";
 import { useDispatch } from "react-redux";
 import { setTVGenres } from "../utils/tvShowSlice";
+import { useSelector } from "react-redux";
+import Explore from "./Explore";
 const TVShow = () => {
     const dispatch = useDispatch();
     const fetchAiringToday = useAiringTodayShows();
@@ -25,11 +27,18 @@ const TVShow = () => {
             dispatch(setTVGenres(genres));
         });
     }, [fetchAiringToday, fetchOnTheAir, fetchPopular, fetchTopRated, fetchTVGenres, dispatch]);
+    const showSearch = useSelector((store) => store?.search?.showSearch);
     return (
         <div className="bg-black overflow-visible">
         <Header />
-        <MainContainer1/>
-        <SecondaryContainer1/>
+        {showSearch ? (
+            <Explore/>
+        ):(
+            <>
+                <MainContainer1 />
+                <SecondaryContainer1 />
+            </>
+        )}
         </div>
     );
 };

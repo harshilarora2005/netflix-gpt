@@ -9,7 +9,8 @@ import MainContainer from "./MainContainer";
 import SecondaryContainer2 from "./SecondaryContainer2";
 import { useDispatch } from "react-redux";
 import { setMovieGenres } from "../utils/movieSlice";
-
+import { useSelector } from "react-redux";
+import Explore from "./Explore";
 const Movies = () => {
     const dispatch = useDispatch();
     const fetchNowPlayingMovies = useNowPlayingMovies();
@@ -27,12 +28,18 @@ const Movies = () => {
             dispatch(setMovieGenres(genres));
         });
     }, [fetchNowPlayingMovies, fetchPopularMovies, fetchTopRatedMovies, fetchUpcomingMovies, fetchMovieGenre, dispatch]);
-
+    const showSearch = useSelector((store) => store?.search?.showSearch);
     return (
         <div className="bg-black overflow-visible">
             <Header />
-            <MainContainer />
-            <SecondaryContainer2/>
+            {showSearch ? (
+                <Explore/>
+            ):(
+                <>
+                    <MainContainer />
+                    <SecondaryContainer2 />
+                </>
+            )}
         </div>
     );
 };

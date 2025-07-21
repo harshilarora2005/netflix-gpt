@@ -2,11 +2,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState, useCallback, useRef } from "react";
 import { appendRecommendedMovies, addSeenMovies } from "../utils/searchSlice";
 import { getMovieRecommendations } from "../utils/gemini";
-import useSearchMovies from "./hooks/useSearchMovie";
-import MovieCard from "./MovieCard";
+import useSearchContent from "./hooks/useSearchContent";
+import MovieList from "./MovieList";
 
 const MovieSuggestions = () => {
-    const searchMovie = useSearchMovies();
+    const searchContent = useSearchContent();
     const dispatch = useDispatch();
     const movies = useSelector((store) => store.search?.recommendedMovies);
     const promptText = useSelector((store) => store.search?.promptText);
@@ -18,6 +18,15 @@ const MovieSuggestions = () => {
     const observerRef = useRef(null);
     const sentinelRef = useRef(null);
 
+    const getMoviesPerRow = () => {
+        const width = window.innerWidth;
+        if (width >= 1600) return 6;  
+        if (width >= 1280) return 5;  
+        if (width >= 1024) return 4;  
+        if (width >= 768) return 3;   
+        return 2; 
+    };
+
     const loadMoreMovies = useCallback(async () => {
         if (loadingRef.current || !promptText) return;
         
@@ -27,12 +36,15 @@ const MovieSuggestions = () => {
 
         try {
             const response = await getMovieRecommendations(
-                promptText + " but dont include these movies: " + seenMovies
+                promptText + " but dont include these titles: " + seenMovies
             );
-            const movieNames = response.split(',').map((m) => m.trim()).filter(Boolean);
-            const promiseArray = movieNames.map((movie) => searchMovie(movie));
+            const contentNames = response.split(',').map((m) => m.trim()).filter(Boolean);
+            const promiseArray = contentNames.map((content) => searchContent(content)); 
             const result = await Promise.all(promiseArray);
-            const recommendedMovies = result.flat().filter(Boolean);
+            const recommendedMovies = result
+            .flat()
+            .filter((movie) => movie && movie.backdrop_path);
+            console.log(recommendedMovies);
             dispatch(addSeenMovies(response));
             if (recommendedMovies.length > 0) {
                 dispatch(appendRecommendedMovies(recommendedMovies));
@@ -44,12 +56,23 @@ const MovieSuggestions = () => {
             setIsLoading(false);
             loadingRef.current = false;
         }
-    }, [promptText, seenMovies, searchMovie, dispatch]);
+    }, [promptText, seenMovies, searchContent, dispatch]);
+
+    const createMovieRows = (allMovies) => {
+        const moviesPerRow = getMoviesPerRow();
+        const rows = [];
+        
+        for (let i = 0; i < allMovies.length; i += moviesPerRow) {
+            rows.push(allMovies.slice(i, i + moviesPerRow));
+        }
+        
+        return rows;
+    };
 
     useEffect(() => {
         const options = {
             root: null,
-            rootMargin: '100px',
+            rootMargin: '200px', // Load more when user is 200px from bottom
             threshold: 0.1
         };
 
@@ -87,9 +110,12 @@ const MovieSuggestions = () => {
         );
     }
 
+    const movieRows = createMovieRows(movies);
+
     return (
         <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900">
-            <div className="sticky top-0 z-10 bg-black/80 backdrop-blur-md border-b border-gray-800">
+            {/* Header */}
+            <div className="sticky top-0 z-50 bg-black/80 backdrop-blur-md border-b border-gray-800">
                 <div className="px-4 py-6">
                     <div className="max-w-7xl mx-auto">
                         <div className="flex items-center gap-3 mb-2">
@@ -99,66 +125,57 @@ const MovieSuggestions = () => {
                             </h2>
                         </div>
                         <p className="text-gray-400 text-sm ml-4">
-                            Discover your next favorite movie • {movies.length} recommendations
+                            Discover your next favorite content • {movies.length} recommendations
                         </p>
                     </div>
                 </div>
             </div>
-            <div className="px-4 py-6">
-                <div className="max-w-7xl mx-auto">
-                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6">
-                        {movies.map((movie, index) => (
-                            <div
-                                key={movie.id || index}
-                                style={{
-                                    animationDelay: `${index * 0.1}s`,
-                                    animation: index < 20 ? 'fadeInUp 0.6s ease-out forwards' : 'none'
-                                }}
-                            >
-                                <MovieCard movie={movie} />
-                            </div>
-                        ))}
-                    </div>
-                    {isLoading && (
-                        <div className="flex justify-center items-center py-12">
-                            <div className="flex items-center gap-3 bg-gray-800/50 backdrop-blur-sm px-6 py-4 rounded-full border border-gray-700">
-                                <div className="w-5 h-5 border-2 border-red-500 border-t-transparent rounded-full animate-spin"></div>
-                                <span className="text-white font-medium">Loading more recommendations...</span>
-                            </div>
-                        </div>
-                    )}
-                    {error && (
-                        <div className="flex justify-center py-8">
-                            <div className="bg-red-900/20 border border-red-500/30 text-red-400 px-6 py-4 rounded-lg backdrop-blur-sm">
-                                <p className="text-sm">{error}</p>
-                                <button
-                                    onClick={loadMoreMovies}
-                                    className="mt-2 text-red-400 hover:text-red-300 underline text-sm"
-                                >
-                                    Try Again
-                                </button>
-                            </div>
-                        </div>
-                    )}
-                    <div
-                        ref={sentinelRef}
-                        className="h-4 w-full"
-                        aria-hidden="true"
+
+            {/* Movie Rows */}
+            <div className="pt-6">
+                {movieRows.map((rowMovies, rowIndex) => (
+                    <MovieList
+                        key={rowIndex}
+                        title="" // No title for seamless rows
+                        movies={rowMovies}
+                        mediaType="movie" // or determine from movie data
+                        hasMore={false} // Each row is fixed size, no horizontal scrolling needed
+                        onLoadMore={() => Promise.resolve()} // No-op since we handle loading at the page level
                     />
-                </div>
+                ))}
+
+                {/* Loading State */}
+                {isLoading && (
+                    <div className="flex justify-center items-center py-12">
+                        <div className="flex items-center gap-3 bg-gray-800/50 backdrop-blur-sm px-6 py-4 rounded-full border border-gray-700">
+                            <div className="w-5 h-5 border-2 border-red-500 border-t-transparent rounded-full animate-spin"></div>
+                            <span className="text-white font-medium">Loading more recommendations...</span>
+                        </div>
+                    </div>
+                )}
+
+                {/* Error State */}
+                {error && (
+                    <div className="flex justify-center py-8">
+                        <div className="bg-red-900/20 border border-red-500/30 text-red-400 px-6 py-4 rounded-lg backdrop-blur-sm">
+                            <p className="text-sm">{error}</p>
+                            <button
+                                onClick={loadMoreMovies}
+                                className="mt-2 text-red-400 hover:text-red-300 underline text-sm"
+                            >
+                                Try Again
+                            </button>
+                        </div>
+                    </div>
+                )}
+
+                {/* Intersection Observer Sentinel */}
+                <div
+                    ref={sentinelRef}
+                    className="h-20 w-full"
+                    aria-hidden="true"
+                />
             </div>
-            <style jsx>{`
-                @keyframes fadeInUp {
-                    from {
-                        opacity: 0;
-                        transform: translateY(30px);
-                    }
-                    to {
-                        opacity: 1;
-                        transform: translateY(0);
-                    }
-                }
-            `}</style>
         </div>
     );
 };

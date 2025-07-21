@@ -8,7 +8,6 @@ const MovieList = ({ title, movies, onLoadMore, hasMore, mediaType='movie' }) =>
     const [canScrollRight, setCanScrollRight] = useState(true);
     const [isHovered, setIsHovered] = useState(false);
     const [isFetching, setIsFetching] = useState(false);
-
     const checkScrollability = () => {
         if (scrollContainerRef.current) {
         const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current;
@@ -94,7 +93,7 @@ const MovieList = ({ title, movies, onLoadMore, hasMore, mediaType='movie' }) =>
 
             <div
             ref={scrollContainerRef}
-            className="flex gap-2 overflow-x-auto scrollbar-hide scroll-smooth pt-4 relative z-10"
+            className="flex gap-2 overflow-x-auto scrollbar-hide scroll-smooth pt-4 relative z-10 overflow-visible"
             onScroll={handleScroll}
             style={{
                 scrollbarWidth: "none",
