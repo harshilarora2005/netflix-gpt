@@ -18,7 +18,7 @@
 - **📊 User Analytics**: Track viewing preferences and behavior
 - **🎨 Modern UI/UX**: Clean, intuitive interface with smooth animations
 
-> Try it out here at [LINK](moviegpt-90547.web.app)
+> Try it out here at [LINK](https://moviegpt-90547.web.app)
 ## 🚀 Tech Stack
 
 ### Frontend
