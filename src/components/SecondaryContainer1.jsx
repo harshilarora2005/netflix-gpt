@@ -63,14 +63,12 @@ const SecondaryContainer = () => {
         else setHasMoreTopRated(false);
     };
     const handleGenreSelect = async (genre) => {
-        console.log("HI");
         dispatch(setSelectedTVGenre(genre));
         dispatch(clearGenreTVShows());
         setDropdownOpen(false);
         
         const { shows, hasMore } = await fetchTVShowsByGenre(genre.id, 1);
         dispatch(setGenreTVShows({ genreId: genre.id, shows }));
-        console.log(shows);
         setGenrePages(prev => ({ ...prev, [genre.id]: 1 }));
         setGenreHasMore(prev => ({ ...prev, [genre.id]: hasMore }));
     };

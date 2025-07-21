@@ -4,13 +4,15 @@ import { API_OPTIONS } from '../../utils/constants';
 export const useMoviesByGenre = () => {
     const fetchMoviesByGenre = useCallback(async (genreId, page = 1) => {
         try {
+            console.log("fetching");
             const response = await fetch(
                 `https://api.themoviedb.org/3/discover/movie?with_genres=${genreId}&page=${page}&sort_by=popularity.desc`,
                 API_OPTIONS
             );
             const data = await response.json();
-            
+            console.log(data);
             if (data.results && data.results.length > 0) {
+                console.log("here");
                 return {
                     movies: data.results,
                     hasMore: data.page < data.total_pages

@@ -2,7 +2,7 @@
 /* eslint-disable no-unused-vars */
 import logo from "/logo-nobg.png";
 import avatar from "../assets/Netflix-avatar.png";
-import { useLocation, Link, useNavigate } from "react-router";
+import { useLocation, NavLink, useNavigate } from "react-router";
 import { useEffect, useState } from "react";
 import { signOut, onAuthStateChanged } from "firebase/auth";
 import { auth } from "../utils/firebase";
@@ -70,30 +70,55 @@ const Header = () => {
                     </div>
                     {isBrowsePage && (
                         <nav className="hidden lg:flex items-center space-x-6">
-                            <Link 
+                            <NavLink 
                                 to="/browse" 
-                                className="text-white text-sm font-medium hover:text-gray-300 transition-colors duration-200"
+                                end
+                                className={({ isActive }) =>
+                                `text-sm font-semibold transition-colors duration-300 pb-1 ${
+                                isActive
+                                    ? "text-white border-b-[3px] border-red-600"
+                                    : "text-white/70 hover:text-white hover:border-b-[3px] hover:border-white/30"
+                                }`
+                            }
                             >
                                 Home
-                            </Link>
-                            <Link 
+                            </NavLink>
+                            <NavLink 
                                 to="/browse/tv-shows" 
-                                className="text-white text-sm font-medium hover:text-gray-300 transition-colors duration-200"
+                                className={({ isActive }) =>
+                                    `text-sm font-semibold transition-colors duration-300 pb-1 ${
+                                    isActive
+                                        ? "text-white border-b-[3px] border-red-600"
+                                        : "text-white/70 hover:text-white hover:border-b-[3px] hover:border-white/30"
+                                    }`
+                                }
                             >
                                 TV Shows
-                            </Link>
-                            <Link 
+                            </NavLink>
+                            <NavLink 
                                 to="/browse/movies" 
-                                className="text-white text-sm font-medium hover:text-gray-300 transition-colors duration-200"
+                                className={({ isActive }) =>
+                                `text-sm font-semibold transition-colors duration-300 pb-1 ${
+                                isActive
+                                    ? "text-white border-b-[3px] border-red-600"
+                                    : "text-white/70 hover:text-white hover:border-b-[3px] hover:border-white/30"
+                                }`
+                            }
                             >
                                 Movies
-                            </Link>
-                            <Link 
+                            </NavLink>
+                            <NavLink 
                                 to="/browse/my-list" 
-                                className="text-white text-sm font-medium hover:text-gray-300 transition-colors duration-200"
+                                className={({ isActive }) =>
+                                `text-sm font-semibold transition-colors duration-300 pb-1 ${
+                                isActive
+                                    ? "text-white border-b-[3px] border-red-600"
+                                    : "text-white/70 hover:text-white hover:border-b-[3px] hover:border-white/30"
+                                }`
+                            }
                             >
                                 My List
-                            </Link>
+                            </NavLink>
                         </nav>
                     )}
                 </div>
@@ -149,34 +174,34 @@ const Header = () => {
             {isBrowsePage && mobileMenuOpen && (
                 <div className="lg:hidden absolute top-full left-0 w-full bg-black/95 backdrop-blur-md border-t border-gray-800">
                     <nav className="flex flex-col p-4 space-y-4">
-                        <Link 
+                        <NavLink 
                             to="/browse" 
                             className="text-white text-base font-medium hover:text-gray-300 transition-colors duration-200 py-2"
                             onClick={() => setMobileMenuOpen(false)}
                         >
                             Home
-                        </Link>
-                        <Link 
+                        </NavLink>
+                        <NavLink 
                             to="/browse/tv-shows" 
                             className="text-white text-base font-medium hover:text-gray-300 transition-colors duration-200 py-2"
                             onClick={() => setMobileMenuOpen(false)}
                         >
                             TV Shows
-                        </Link>
-                        <Link 
+                        </NavLink>
+                        <NavLink 
                             to="/browse/movies" 
                             className="text-white text-base font-medium hover:text-gray-300 transition-colors duration-200 py-2"
                             onClick={() => setMobileMenuOpen(false)}
                         >
                             Movies
-                        </Link>
-                        <Link 
+                        </NavLink>
+                        <NavLink 
                             to="/browse/my-list" 
                             className="text-white text-base font-medium hover:text-gray-300 transition-colors duration-200 py-2"
                             onClick={() => setMobileMenuOpen(false)}
                         >
                             My List
-                        </Link>
+                        </NavLink>
                         <hr className="border-gray-700 my-2" />
                         <button 
                             onClick={() => {

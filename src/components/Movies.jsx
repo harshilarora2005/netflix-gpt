@@ -6,7 +6,7 @@ import useTopRatedMovies from "./hooks/useTopRatedMovies";
 import useUpcomingMovies from "./hooks/useUpcomingMovies";
 import { useMovieGenre } from "./hooks/useMovieGenre";
 import MainContainer from "./MainContainer";
-import SecondaryContainer from "./SecondaryContainer";
+import SecondaryContainer2 from "./SecondaryContainer2";
 import { useDispatch } from "react-redux";
 import { setMovieGenres } from "../utils/movieSlice";
 
@@ -32,7 +32,7 @@ const Movies = () => {
         <div className="bg-black overflow-visible">
             <Header />
             <MainContainer />
-            <SecondaryContainer />
+            <SecondaryContainer2/>
         </div>
     );
 };
